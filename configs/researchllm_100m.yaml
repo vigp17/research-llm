@@ -1,0 +1,8 @@
+model:
+  name: ResearchLLM-100M
+  vocab_size: 32000
+  max_seq_len: 1024
+  num_layers: 8
+  hidden_size: 768
+  num_heads: 12
+  ff_multiplier: 4
