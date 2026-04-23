@@ -4,13 +4,15 @@ import torch
 
 def save_checkpoint(path: str, model, optimizer, scheduler, step: int, loss: float):
     os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp_path = path + ".tmp"
     torch.save({
         "step": step,
         "loss": loss,
         "model": model.state_dict(),
         "optimizer": optimizer.state_dict(),
         "scheduler": scheduler.state_dict() if scheduler is not None else None,
-    }, path)
+    }, tmp_path)
+    os.replace(tmp_path, path)
 
 
 def load_checkpoint(path: str, model, optimizer=None, scheduler=None, device="cpu"):
@@ -24,11 +26,19 @@ def load_checkpoint(path: str, model, optimizer=None, scheduler=None, device="cp
 
 
 def latest_checkpoint(checkpoint_dir: str):
-    """Return path to the most recent checkpoint, or None if none exist."""
+    """Return path to the most recent valid checkpoint, or None if none exist."""
     if not os.path.isdir(checkpoint_dir):
         return None
     ckpts = sorted(
         [f for f in os.listdir(checkpoint_dir) if f.endswith(".pt")],
         key=lambda f: int(f.split("_")[-1].replace(".pt", "")),
+        reverse=True,
     )
-    return os.path.join(checkpoint_dir, ckpts[-1]) if ckpts else None
+    for ckpt in ckpts:
+        path = os.path.join(checkpoint_dir, ckpt)
+        try:
+            torch.load(path, map_location="cpu", weights_only=True)
+            return path
+        except Exception:
+            continue
+    return None
