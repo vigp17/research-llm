@@ -2,7 +2,7 @@ import os
 import torch
 
 
-def save_checkpoint(path: str, model, optimizer, scheduler, step: int, loss: float):
+def save_checkpoint(path: str, model, optimizer, scheduler, step: int, loss: float, keep_last: int = 2):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     tmp_path = path + ".tmp"
     torch.save({
@@ -13,6 +13,15 @@ def save_checkpoint(path: str, model, optimizer, scheduler, step: int, loss: flo
         "scheduler": scheduler.state_dict() if scheduler is not None else None,
     }, tmp_path)
     os.replace(tmp_path, path)
+
+    # Delete old checkpoints, keeping only the last `keep_last`
+    ckpt_dir = os.path.dirname(path)
+    ckpts = sorted(
+        [f for f in os.listdir(ckpt_dir) if f.endswith(".pt")],
+        key=lambda f: int(f.split("_")[-1].replace(".pt", "")),
+    )
+    for old in ckpts[:-keep_last]:
+        os.remove(os.path.join(ckpt_dir, old))
 
 
 def load_checkpoint(path: str, model, optimizer=None, scheduler=None, device="cpu"):
