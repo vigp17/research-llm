@@ -17,9 +17,11 @@ def train_tokenizer():
     print("🔹 Streaming dataset to build tokenizer corpus...")
 
     dataset = load_dataset(
-        "togethercomputer/RedPajama-Data-1T-Sample",
+        "allenai/c4",
+        "en",
         split="train",
         streaming=True,
+        trust_remote_code=True,
     )
 
     with open(corpus_path, "w", encoding="utf-8") as f:

@@ -20,9 +20,11 @@ class StreamingTokenDataset(IterableDataset):
 
         # Stream dataset (no RAM explosion)
         self.dataset = load_dataset(
-            "togethercomputer/RedPajama-Data-1T-Sample",
+            "allenai/c4",
+            "en",
             split=split,
             streaming=True,
+            trust_remote_code=True,
         )
 
     def __iter__(self):
