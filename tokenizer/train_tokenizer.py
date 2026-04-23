@@ -29,6 +29,7 @@ def train_tokenizer():
             if i >= max_lines:
                 break
             text = example.get("text", "")
+            text = text.replace("\x00", "")
             if text.strip():
                 f.write(text.replace("\n", " ") + "\n")
 
