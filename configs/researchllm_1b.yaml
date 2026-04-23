@@ -1,0 +1,19 @@
+model:
+  name: ResearchLLM-1B
+  vocab_size: 32000
+  max_seq_len: 2048
+  num_layers: 14
+  hidden_size: 2048
+  num_heads: 16
+  ff_multiplier: 4
+
+training:
+  batch_size: 2
+  grad_accum_steps: 32
+  max_steps: 250000
+  warmup_steps: 4000
+  learning_rate: 1e-4
+  weight_decay: 0.1
+  grad_clip: 1.0
+  checkpoint_interval: 2500
+  eval_interval: 1000
