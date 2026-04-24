@@ -25,7 +25,7 @@ def top_p_filter(logits: torch.Tensor, p: float) -> torch.Tensor:
     remove = (cumulative_probs - F.softmax(sorted_logits, dim=-1)) > p
     sorted_logits = sorted_logits.masked_fill(remove, float("-inf"))
     # Scatter back to original vocabulary ordering
-    return sorted_logits.scatter(-1, sorted_idx.argsort(-1), sorted_logits)
+    return logits.scatter(-1, sorted_idx, sorted_logits)
 
 
 def repetition_penalty_filter(logits: torch.Tensor, generated_ids: torch.Tensor, penalty: float) -> torch.Tensor:
@@ -41,7 +41,7 @@ def sample_token(
     temperature: float = 1.0,
     top_k: int = 0,
     top_p: float = 1.0,
-    repetition_penalty: float = 1.3,
+    repetition_penalty: float = 1.5,
     generated_ids: torch.Tensor = None,
 ) -> torch.Tensor:
     """Sample next token from (B, vocab_size) logits."""
