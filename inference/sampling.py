@@ -28,13 +28,24 @@ def top_p_filter(logits: torch.Tensor, p: float) -> torch.Tensor:
     return sorted_logits.scatter(-1, sorted_idx.argsort(-1), sorted_logits)
 
 
+def repetition_penalty_filter(logits: torch.Tensor, generated_ids: torch.Tensor, penalty: float) -> torch.Tensor:
+    if penalty == 1.0 or generated_ids is None:
+        return logits
+    score = logits.gather(-1, generated_ids)
+    score = torch.where(score < 0, score * penalty, score / penalty)
+    return logits.scatter(-1, generated_ids, score)
+
+
 def sample_token(
     logits: torch.Tensor,
     temperature: float = 1.0,
     top_k: int = 0,
     top_p: float = 1.0,
+    repetition_penalty: float = 1.3,
+    generated_ids: torch.Tensor = None,
 ) -> torch.Tensor:
     """Sample next token from (B, vocab_size) logits."""
+    logits = repetition_penalty_filter(logits, generated_ids, repetition_penalty)
     logits = temperature_scale(logits, temperature)
     logits = top_k_filter(logits, top_k)
     logits = top_p_filter(logits, top_p)

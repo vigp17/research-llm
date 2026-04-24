@@ -42,7 +42,7 @@ def generate(
         ctx = ids[:, -cap:]
         logits = model(ctx)                  # (1, T, vocab)
         next_logits = logits[:, -1, :]       # (1, vocab)
-        next_token = sample_token(next_logits, temperature=temperature, top_k=top_k, top_p=top_p)
+        next_token = sample_token(next_logits, temperature=temperature, top_k=top_k, top_p=top_p, generated_ids=ids)
         ids = torch.cat([ids, next_token], dim=1)
         if next_token.item() == eos_id:
             break
