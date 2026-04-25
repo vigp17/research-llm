@@ -1,5 +1,6 @@
 import argparse
 import os
+import shutil
 import time
 
 import torch
@@ -134,7 +135,7 @@ def train(config_path: str, tokenizer_path: str, checkpoint_dir: str, resume: bo
             ckpt_file = os.path.join(checkpoint_dir, f"ckpt_{step:07d}.pt")
             tmp_local = f"/tmp/ckpt_{step:07d}.pt"
             save_checkpoint(tmp_local, model, optimizer, scheduler, step, cur_loss)
-            os.replace(tmp_local, ckpt_file)
+            shutil.move(tmp_local, ckpt_file)
             tqdm.write(f"[step {step}] checkpoint saved → {ckpt_file}")
 
         # ── Evaluation ───────────────────────────────────────────────────────
