@@ -2,6 +2,10 @@
 
 A transformer language model built from scratch in PyTorch, following modern design choices from LLaMA, PaLM, and GPT-4 technical reports. Available in three sizes: 100M, 300M, and 1B parameters.
 
+📦 **Models:** [ResearchLLM-100M](https://huggingface.co/Vigp17/researchllm-100m) | [ResearchLLM-300M](https://huggingface.co/Vigp17/researchllm-300m)
+🚀 **Live Demo:** [Hugging Face Spaces](https://huggingface.co/spaces/Vigp17/researchllm-demo)
+💻 **Code:** [GitHub](https://github.com/vigp17/research-llm)
+
 ## Architecture
 
 | Component | Choice | Rationale |
