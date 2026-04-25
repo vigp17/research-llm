@@ -132,7 +132,9 @@ def train(config_path: str, tokenizer_path: str, checkpoint_dir: str, resume: bo
         # ── Checkpoint ───────────────────────────────────────────────────────
         if step % ckpt_interval == 0:
             ckpt_file = os.path.join(checkpoint_dir, f"ckpt_{step:07d}.pt")
-            save_checkpoint(ckpt_file, model, optimizer, scheduler, step, cur_loss)
+            tmp_local = f"/tmp/ckpt_{step:07d}.pt"
+            save_checkpoint(tmp_local, model, optimizer, scheduler, step, cur_loss)
+            os.replace(tmp_local, ckpt_file)
             tqdm.write(f"[step {step}] checkpoint saved → {ckpt_file}")
 
         # ── Evaluation ───────────────────────────────────────────────────────
@@ -147,7 +149,9 @@ def train(config_path: str, tokenizer_path: str, checkpoint_dir: str, resume: bo
 
     # Final checkpoint
     final_ckpt = os.path.join(checkpoint_dir, f"ckpt_{step:07d}.pt")
-    save_checkpoint(final_ckpt, model, optimizer, scheduler, step, cur_loss)
+    tmp_local = f"/tmp/ckpt_{step:07d}.pt"
+    save_checkpoint(tmp_local, model, optimizer, scheduler, step, cur_loss)
+    os.replace(tmp_local, final_ckpt)
     print(f"Training complete. Final checkpoint → {final_ckpt}")
 
 
