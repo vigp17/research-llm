@@ -118,7 +118,7 @@ def train(config_path: str, tokenizer_path: str, checkpoint_dir: str, resume: bo
             scheduler.step()
             optimizer.zero_grad()
 
-            cur_loss = accum_loss * grad_accum
+            cur_loss = accum_loss
             cur_lr   = scheduler.get_last_lr()[0]
             elapsed  = time.time() - t0
 
