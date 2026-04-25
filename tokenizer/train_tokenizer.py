@@ -47,6 +47,7 @@ def train_tokenizer():
         unk_id=3,
     )
 
+    os.remove(corpus_path)
     print("🎉 Tokenizer training complete!")
     print(f"Saved: {model_prefix}.model")
 
